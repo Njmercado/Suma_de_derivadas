@@ -1,2 +1,3 @@
-result = taylor(exp(x),'ExpansionPoint',0)
+syms x
+result = taylor(x^(3/2),x,'ExpansionPoint',3)
 fplot(result)

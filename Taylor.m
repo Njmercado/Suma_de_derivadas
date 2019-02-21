@@ -10,27 +10,26 @@ syms x
 %value = input('value to be evaluated: ')
 %order = input('input the order: ')
 
-func = @(x) exp(x);
-func(x)
-center = 2;
-value = 1;
-order = 20;
+func = @(x) x^(3/2);
+center = 3;
+value = 10;
+order = 5;
+interval = [1 10000];
 potencialFunctionResults = {};
 
 for i=1:order
     denominator = factorial(i-1);
-    derivative = matlabFunction(diff(func(x), i-1));
-    derivative = derivative(center);
+    derivative = diff(func(x), i-1);
     x_a = (x-center)^(i-1);
     potencialFunctionResults{i} = ((derivative)*(x_a))/(denominator);
 end
 
-finalFunction = showPotencialFunctionResult(potencialFunctionResults);
-
+finalFunction = showPotencialFunctionResult(potencialFunctionResults)
+func
 %%Graficacion
 
-fplot(func, 'y')
-fplot(finalFunction, 'g')
+fplot(func(x),'Linewidth', 2)
+fplot(finalFunction, '+')
 
 %ttaylor = taylor(func(x), 'ExpansionPoint', center)
 %fplot(ttaylor, 'r')
