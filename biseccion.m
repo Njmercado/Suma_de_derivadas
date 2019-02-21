@@ -17,7 +17,8 @@ sw = 1;
 r = 0;
 count = 0;
 r_old = 0;
-errors = zeros(1,100)
+errors = [];
+error = 0;
 
 while(sw==1)
     
@@ -40,4 +41,4 @@ while(sw==1)
     sw = ~(error < tolerance);
 end
 
-fplot(errors, [0:length(errors)])
+plot(errors, 'linewidth', 2)
