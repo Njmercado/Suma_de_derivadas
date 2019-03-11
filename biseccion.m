@@ -36,9 +36,9 @@ while(sw==1)
     end
     
     errors = [errors error]
-    error = abs((r-r_old))/r;
+    error = abs(r-r_old)/r;
     r_old = r;
-    sw = ~(error < tolerance);
+    sw = ~(error < tolerance)
 end
 
 plot(errors, 'linewidth', 2)

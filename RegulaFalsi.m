@@ -1,38 +1,16 @@
 clc
 clear
 syms x
-hold on all
 
+P = x^15 - 120*x^14 + 6580*x^13 - 218400*x^12 + 4899622*x^11 - 78558480*x^10 + 928095740*x^9 - 8207628000*x^8 + 54631129553*x^7 - 272803210680*x^6 + 1009672107080*x^5 - 2706813345600*x^4 + 5056995703824*x^3 - 6165817614720*x^2 + 4339163001600*x - 1307674368000
+p1 = 0.95
+p2 = 1.05
+tolerance = 0.00001
 
-tolerance = 0.00001;
-n = 15;
-
-P = wilkinson(n)
-root = regulaFalsi(P, 0.95, 1.05, tolerance)
-froot = subs(P,x,root)
-
-fplot(P,[0 n])
-plot(root,froot,'rO')
-legend(['P(X) = ', char(P)])
-grid on
-grid minor
+root = regulaFalsi(P,p1,p2,tolerance)
 
 
 %%Functions
-function result = wilkinson(n)
-    syms x
-    func = 1;
-    for i=1:n
-        func = func*(x-i);
-    end
-    result = expand(func);
-end
-
-%Analizando la grafica me pude dar cuenta que los puntos que funcionarian
-%para poder realizar el debido proceso son: '0,95' y '1,05'. Los puntos
-%hallados, no son los unicos puntos que cumplen con la condición, hay la
-%misma cantidad de punto que el doble del grado del polinomio.
-
 function result = regulaFalsi(P, p1, p2, tolerance)
      
     syms x
@@ -62,7 +40,7 @@ function result = regulaFalsi(P, p1, p2, tolerance)
             old_root = root;
         end
         
-        counter = counter + 1;
+        counter = counter + 1
     end
     fprintf('Se realizaron %1.0f iteraciones \n', counter)
     result = root;
