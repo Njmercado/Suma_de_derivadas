@@ -6,9 +6,7 @@ Function = Function();
 
 n = 15;
 
-P = Function.Wilkinson(n);
-
-Function.polynomial = P;
+P = Function.Wilkinson(n)
 
 root = Function.RegulaFalsi(0.95, 1.05)
 froot = subs(P,x,root)
