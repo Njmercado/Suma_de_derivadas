@@ -2,6 +2,8 @@ clc
 clear
 hold on all
 syms x
+addpath('../') %%Take files from others folders, in this case i using 'Function.m'
+
 Function = Function();
 
 %Ya que la teoria nos dice que las raices de este polinomio son iguales a

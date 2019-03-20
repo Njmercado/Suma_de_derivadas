@@ -2,15 +2,17 @@ clc
 clear
 syms x
 hold on all
+addpath('../') %%Take files from others folders, in this case i using 'Function.m'
+
 Function = Function();
 
-n = 15;
+n = 20;
 
 P = Function.Wilkinson(n);
 
 Function.polynomial = P;
 
-root = Function.NewtonRaphson()
+root = Function.NewtonRaphson([14 16])
 froot = subs(P,x,root);
 
 fplot(P,[0 n], 'linewidth',2)
