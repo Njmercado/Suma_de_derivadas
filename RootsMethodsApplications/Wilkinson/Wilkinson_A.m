@@ -20,4 +20,4 @@ for i=1:n
     plot(i,subs(result,x,i), 'rO')%Grafica todos los puntos(raices).
 end
 legend(['result: ', char(result)])
-
+title('Wilkinson A')

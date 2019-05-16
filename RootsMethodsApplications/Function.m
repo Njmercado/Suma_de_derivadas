@@ -3,13 +3,16 @@ classdef Function
         tolerance
         polynomial
         counter
+        errors
+        count
     end
     
     methods 
         function obj = Function()%init
             syms x
-            
-            obj.tolerance  = 0.00001;
+            errors = [];
+            count = [];
+            obj.tolerance  = 0.00005;
             obj.polynomial = x^2-1; %Function by default
             obj.counter = 0;
         end
@@ -20,12 +23,13 @@ classdef Function
      
             syms x
 
-            sw = true;
+            sw = 1;
             root = 0;
             old_root = 0;
             obj.counter = 0;
-            
-            while(sw)
+            obj.errors = [];
+            obj.count = [];
+            while sw
         
                 fp1 = subs(obj.polynomial,x,p1);
                 fp2 = subs(obj.polynomial,x,p2);
@@ -33,7 +37,7 @@ classdef Function
                 froot = subs(obj.polynomial,x,root);
         
                 if(froot*fp1==0)
-                    break
+                    break;
                 else
                     
                     if(froot*fp1<0)
@@ -45,11 +49,13 @@ classdef Function
                     error = (abs(root-old_root)/root)*100;
                     sw = ~(error < obj.tolerance);
                     old_root = root;
+                    obj.errors = [obj.errors error];
+                    obj.count = [obj.count obj.counter];
                 end
         
                 obj.counter = obj.counter + 1;
             end
-            
+        
             obj.Message(obj.counter)
             y = root;
         end%Regula Falsi
@@ -69,7 +75,7 @@ classdef Function
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        function y = NewtonRaphson(obj, interval)
+        function y = NewtonRaphson(obj, x_0)
             
             syms x
             
@@ -78,17 +84,17 @@ classdef Function
             
             if dp~=0
                 
-                newton = x - obj.polynomial./dp; %Newton function
+                newton = x - obj.polynomial/dp; %Newton function
                 sw = 1;
                 x_n = 0;
-                [x_0, warning] = obj.NewtonRaphsonCondition(interval);
+                %[x_0, warning] = obj.NewtonRaphsonCondition(interval);
                 
-                if warning
+                %if warning
                     
-                    fprintf('WARNING:\n')
-                    fprintf('No hay certeza de que la función ingresada converga tan rapido como deberia\n')
-                    fprintf('ya que podría tener un punto de inflexion.\n\n')
-                end
+                 %   fprintf('WARNING:\n')
+                  %  fprintf('No hay certeza de que la función ingresada converga tan rapido como deberia\n')
+                   % fprintf('ya que podría tener un punto de inflexion.\n\n')
+                %end
 
                 while sw
                     x_n = x_0;
@@ -175,6 +181,7 @@ classdef Function
             syms x;
             dg = diff(obj.polynomial,x);
             y=x_0;
+            obj.counter = 0;
             
             if abs(subs(dg,x,y)) < 1
                 
@@ -185,8 +192,10 @@ classdef Function
                  
                     xi = subs(obj.polynomial, x, y);
                     
-                    error = abs((xi-y)/xi)*100
+                    error = abs((xi-y)/xi)*100;
                     sw = ~(error<obj.tolerance);
+                    
+                    obj.counter = obj.counter + 1;
                     
                     y = xi;
                 end
@@ -196,6 +205,7 @@ classdef Function
                 y = NaN;
             end
         
+            obj.Message(obj.counter)
         end%Fixed Point
         
     end%Methods
@@ -208,24 +218,26 @@ classdef Function
         %Also help me to reduce cycles to process data.
         function [y, warning] = NewtonRaphsonCondition(obj, interval)
             
-            syms x
+            syms x;
             
             a = interval(1);
             b = interval(2);
             
-            y = (b-a).*rand(1,1,'double')+a;
+            y = (b-a)*rand(1,1,'double')+a;
             d2p = diff(obj.polynomial, 2);%Second derivative
             d2p = solve(d2p, x);%Reduce as much as possible.
+            t = 0;
             
             if d2p~=0 %Not const
             
-                t = y.*subs(d2p, x, y);%Condition to get a good point. If this is gt 0, then in good.
+                t = y*subs(d2p, x, y);%Condition to get a good point. If this is gt 0, then in good.
             
-                while(t<=0)
+                while(t<0)
                
-                    y = (b-a).*rand(1,1,'double')+a;
-                    t = y.*subs(d2p, x, y);
+                    y = (b-a)*rand(1,1,'double')+a;
+                    t = y*subs(d2p, x, y);
                 end
+                
             else
                 warning = 1;
             end
